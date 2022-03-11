@@ -21,16 +21,24 @@ class CAN_Adapter:
 
         if "CAN-RX:" in output:
             logging.debug("RX: " + str(output))
-            return str(output).replace("RX: ", "")
+            return str(output).replace("CAN-RX: ", "")
 
-        elif "Adapter-Warn:" in output:
-            logging.warning("Adapter-Hardware: " + str(output))
+        elif "CAN-TX:" in output:
+            logging.debug("TX: " + str(output))
 
-        elif "Adapter-Info:" in output:
+        else
             logging.info("Adapter-Hardware: " + str(output))
 
         return ""
 
-    def write(self, message):
+    def write(self, id, data):
+        if (len(data) != 8):
+            logging.warning(f"Invalid Message Size {len(data)}")
+            return
+
+        formatted_data = ""
+        for dat in data:
+            formatted_data += f"{dat} "
+
         logging.debug("TX: " + str(output))
-        serial.write(message)
+        serial.write(f"CMD-Send: ({id}) {formatted_data}")
