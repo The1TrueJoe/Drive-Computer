@@ -1,2 +1,2 @@
 # DriveComputer-Core
-Base library for interacting with the hardware from the drive computer
+Software that runs on the core drive computer. Handles the managment of the cart and brings the systems together.
