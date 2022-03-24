@@ -31,6 +31,7 @@ class CAN_Adapter:
             logging.warning(f"Failed To Connect to {serial_port} at {baud} baud")
             print("FATAL: Cannot connect to the drive computer's CAN adapter")
             quit()
+            
 
     # Return a reference to the device
     #
@@ -38,6 +39,7 @@ class CAN_Adapter:
 
     def get_device(self):
         return self.arduino
+
 
     # Manually send a message to the CAN Adapter
     #
@@ -67,6 +69,7 @@ class CAN_Adapter:
 
         return ""
 
+
     # Send CAN message
     #
     # id: 32-bit CAN Bus ID
@@ -84,5 +87,11 @@ class CAN_Adapter:
             formatted_data += f"{dat} "
 
         # Send message as String
-        logging.debug("TX: " + str(output))
-        self.arduino.write(f"CMD-Send: ({id}) {formatted_data}")
+        output = f"({id}) {formatted_data}"
+        logging.debug(f"TX: {output}")
+        self.arduino.write(f"CMD-Send: {output}")
+
+    # Send CAN message
+    def write(self, message):
+        logging.debug(f"TX: {message}")
+        self.arduino.write(f"CMD-Send: {message}")
