@@ -1,6 +1,7 @@
 import threading
 import logging
 import time
+from drive_control.computer_components.accelerometer import Accelerometer
 
 import drive_control.computer_components.computer_lcd as LCD
 from drive_control.computer_components.can_adapter import CAN_Adapter
@@ -30,6 +31,9 @@ class MyCart:
 
         # CAN Adapter
         self.can_adapter = CAN_Adapter()
+
+        # Accelerometer
+        self.accelerometer = Accelerometer()
 
         # Start Message RX Processing
         listener = threading.Thread(target=self.listen, daemon=True)
@@ -94,15 +98,26 @@ class MyCart:
     def setSpeed(self, speed):
         self.can_adapter.write(self.speed_controller.setSpeedPotPos(pos = speed))
 
+    def completeStop(self):
+        if not self.accelerometer.isStopped():
+            self.brake()
+
+            while not self.accelerometer.isStopped():
+                time.sleep(100)
+
     # ----------------------------
     # Direction
     # ----------------------------
 
     def forwards(self):
+        self.completeStop()
         self.can_adapter.write(self.speed_controller.setForwards())
+        self.disengageBrakes()
 
     def reverse(self):
+        self.completeStop()
         self.can_adapter.write(self.speed_controller.setReverse())
+        self.disengageBrakes()
 
     # ----------------------------
     # Turn Signals
