@@ -1,10 +1,11 @@
 import threading
 import logging
 import time
-from drive_control.computer_components.accelerometer import Accelerometer
+import enum
 
-import drive_control.computer_components.computer_lcd as LCD
+from drive_control.computer_components.accelerometer import Accelerometer
 from drive_control.computer_components.can_adapter import CAN_Adapter
+import drive_control.computer_components.computer_lcd as LCD
 
 from drive_control.modules.accessory_ctrl import Accessory_Controller
 from drive_control.modules.direction_ctrl import Direction_Controller
@@ -35,6 +36,9 @@ class MyCart:
         # Accelerometer
         self.accelerometer = Accelerometer()
 
+        # Mode
+        self.current_mode = self.Mode.AUTO
+
         # Start Message RX Processing
         listener = threading.Thread(target=self.listen, daemon=True)
         listener.start()
@@ -42,7 +46,6 @@ class MyCart:
         # Start Perodic Update Requests
         perodic = threading.Thread(target=self.periodicLoop, daemon=True)
         perodic.start()
-
 
     # ----------------------------
     # Threads
@@ -65,11 +68,27 @@ class MyCart:
     # Mode
     # ----------------------------
 
-    def setManualDrive(self):
+    class Mode(enum.Enum):
+        AUTO = 1
+        MANUAL = 2
+        TELEOP = 3
+
+    def setManual(self):
+        self.current_mode = self.Mode.MANUAL
+
         self.can_adapter.write(self.speed_controller.setManualInput())
         self.can_adapter.write(self.direction_controller.setWheelInputSteering())
 
-    def setControlledDrive(self):
+    def setAuto(self):
+        self.current_mode = self.Mode.AUTO
+
+        self.can_adapter.write(self.speed_controller.setComputerInput())
+        self.can_adapter.write(self.direction_controller.setControlledSteering())
+        
+
+    def setTeleop(self):
+        self.current_mode = self.Mode.TELEOP
+
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
 
