@@ -37,15 +37,12 @@ class MyCart:
         # Accelerometer
         self.accelerometer = Accelerometer()
 
-        # Mode
-        self.current_mode = Mode.AUTO
-
         # Start Message RX Processing
         listener = threading.Thread(target=self.listen, daemon=True)
         listener.start()
 
         # Start Perodic Update Requests
-        perodic = threading.Thread(target=self.periodicLoop, daemon=True)
+        perodic = threading.Thread(target=self.periodic, daemon=True)
         perodic.start()
 
     # ----------------------------
@@ -58,7 +55,7 @@ class MyCart:
         if (message != ""):
             self.processMessage(message = message)
 
-    def periodicLoop(self):
+    def periodic(self):
         while True:
             time.sleep(100)
 
@@ -69,22 +66,16 @@ class MyCart:
     # Mode
     # ----------------------------
 
-    def setManual(self):
-        self.current_mode = Mode.MANUAL
-
+    def applyManual(self):
         self.can_adapter.write(self.speed_controller.setManualInput())
         self.can_adapter.write(self.direction_controller.setWheelInputSteering())
 
-    def setAuto(self):
-        self.current_mode = Mode.AUTO
-
+    def applyAuto(self):
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
         
 
-    def setTeleop(self):
-        self.current_mode = Mode.TELEOP
-
+    def applyTeleop(self):
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
 
