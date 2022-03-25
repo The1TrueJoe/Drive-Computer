@@ -1,7 +1,8 @@
 import threading
 import logging
 import time
-import enum
+
+from drive.drive import Mode
 
 from drive_control.computer_components.accelerometer import Accelerometer
 from drive_control.computer_components.can_adapter import CAN_Adapter
@@ -37,7 +38,7 @@ class MyCart:
         self.accelerometer = Accelerometer()
 
         # Mode
-        self.current_mode = self.Mode.AUTO
+        self.current_mode = Mode.AUTO
 
         # Start Message RX Processing
         listener = threading.Thread(target=self.listen, daemon=True)
@@ -68,26 +69,21 @@ class MyCart:
     # Mode
     # ----------------------------
 
-    class Mode(enum.Enum):
-        AUTO = 1
-        MANUAL = 2
-        TELEOP = 3
-
     def setManual(self):
-        self.current_mode = self.Mode.MANUAL
+        self.current_mode = Mode.MANUAL
 
         self.can_adapter.write(self.speed_controller.setManualInput())
         self.can_adapter.write(self.direction_controller.setWheelInputSteering())
 
     def setAuto(self):
-        self.current_mode = self.Mode.AUTO
+        self.current_mode = Mode.AUTO
 
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
         
 
     def setTeleop(self):
-        self.current_mode = self.Mode.TELEOP
+        self.current_mode = Mode.TELEOP
 
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
