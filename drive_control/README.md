@@ -1,0 +1,3 @@
+# Drive Controller
+
+This is an abstraction of the physical hardware used to control the golf cart. Contains the processing to control base functions of the golf cart (i.e standard periodic sensor checks). All hardware should be referenced within. The drive logic classes should contain their specific files elsewhere in the repo. All of the hardware should be abstracted in "MyCart". This will be referenced as an object in the main drive control.
