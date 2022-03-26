@@ -1,3 +1,5 @@
 serial
 logging
 socket
+threading
+pyfiglet

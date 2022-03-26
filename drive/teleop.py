@@ -1,7 +1,7 @@
 from drive.drive import Mode
 
 
-class Manual:
+class Teleop:
 
     def __init__(self, cart):
         self.kill = False

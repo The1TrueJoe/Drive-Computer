@@ -18,19 +18,28 @@ class CAN_Adapter:
 
     def __init__(self, serial_port = '/dev/ttyUSB0', baud = 11520):
         # Setup the message logging
-        logging.basicConfig(filename = 'can.log', filemode = 'w', format =' %(asctime)s - %(message)s')
+        self.logger = logging.getLogger("can")
+        file_handler = logging.FileHandler("logs/can.log")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+        self.logger.addHandler(file_handler)
+
+        # Init Message
+        self.logger.info("Initializing CAN Adapter")
 
         try:
             # Attempt to establish connection to CAN adapter
-            logging.info(f"Attempting to connect to {serial_port} at {baud} baud")
+            self.logger.info(f"Attempting to connect to {serial_port} at {baud} baud")
             self.arduino = serial.Serial(port = serial_port, baudrate = baud, timeout = .1)
 
-            logging.info(f"Connection sucessful to {serial_port} at {baud} baud")
+            self.logger.info(f"Connection sucessful to {serial_port} at {baud} baud")
 
         except:
-            logging.warning(f"Failed To Connect to {serial_port} at {baud} baud")
+            self.logger.fatal(f"Failed To Connect to {serial_port} at {baud} baud")
             print("FATAL: Cannot connect to the drive computer's CAN adapter")
             quit()
+
+        # Init Message
+        self.logger.info("CAN Adapter Initialized")
             
 
     # Return a reference to the device
@@ -46,7 +55,7 @@ class CAN_Adapter:
     # message: Message to send
 
     def send_string_to_adapter(self, message):
-        logging.debug("MAN: " + message)
+        self.logger.debug("MAN: " + message)
         self.arduino.write(message)
 
 
@@ -58,14 +67,14 @@ class CAN_Adapter:
         output = self.arduino.readLine()
 
         if "CAN-RX:" in output:
-            logging.debug("RX: " + str(output))
+            self.logger.debug("RX: " + str(output))
             return str(output).replace("CAN-RX: ", "")
 
         elif "CAN-TX:" in output:
-            logging.debug("TX: " + str(output))
+            self.logger.debug("TX: " + str(output))
 
         else:
-            logging.info("Adapter-Hardware: " + str(output))
+            self.logger.info("Adapter-Hardware: " + str(output))
 
         return ""
 
@@ -78,7 +87,7 @@ class CAN_Adapter:
     def write(self, id, data):
         # Check Message Size
         if len(data) != 8:
-            logging.warning(f"Invalid Message Size {len(data)}")
+            self.logger.warning(f"Invalid Message Size {len(data)}")
             return
 
         # Format Message
@@ -88,10 +97,10 @@ class CAN_Adapter:
 
         # Send message as String
         output = f"({id}) {formatted_data}"
-        logging.debug(f"TX: {output}")
+        self.logger.debug(f"TX: {output}")
         self.arduino.write(f"CMD-Send: {output}")
 
     # Send CAN message
     def write(self, message):
-        logging.debug(f"TX: {message}")
+        self.logger.debug(f"TX: {message}")
         self.arduino.write(f"CMD-Send: {message}")
