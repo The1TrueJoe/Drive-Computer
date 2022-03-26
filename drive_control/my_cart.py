@@ -67,15 +67,20 @@ class MyCart:
     # ----------------------------
 
     def applyManual(self):
+        self.completeStop()
+
         self.can_adapter.write(self.speed_controller.setManualInput())
         self.can_adapter.write(self.direction_controller.setWheelInputSteering())
 
     def applyAuto(self):
+        self.completeStop()
+
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
         
-
     def applyTeleop(self):
+        self.completeStop()
+
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
 
@@ -117,12 +122,12 @@ class MyCart:
 
     def forwards(self):
         self.completeStop()
-        self.can_adapter.write(self.speed_controller.setForwards())
+        self.can_adapter.write(self.speed_controller.direction_controller.forwards())
         self.disengageBrakes()
 
     def reverse(self):
         self.completeStop()
-        self.can_adapter.write(self.speed_controller.setReverse())
+        self.can_adapter.write(self.speed_controller.direction_controller.reverse())
         self.disengageBrakes()
 
     # ----------------------------
@@ -130,21 +135,21 @@ class MyCart:
     # ----------------------------
 
     def rightSignal(self):
-        self.can_adapter.write(self.accessory_controller.rightSignalBlink())
+        self.can_adapter.write(self.accessory_controller.right_signal.blink())
 
     def leftSignal(self):
-        self.can_adapter.write(self.accessory_controller.leftSignalBlink())
+        self.can_adapter.write(self.accessory_controller.left_signal.blink())
 
     def stopSignal(self):
-        self.can_adapter.write(self.accessory_controller.leftSignalOff())
-        self.can_adapter.write(self.accessory_controller.rightSignalOff())
+        self.can_adapter.write(self.accessory_controller.left_signal.off())
+        self.can_adapter.write(self.accessory_controller.right_signal.off())
 
     # ----------------------------
     # Horn
     # ----------------------------
 
     def honk(self):
-        self.can_adapter.write(self.accessory_controller.honk())
+        self.can_adapter.write(self.accessory_controller.horn.honk())
 
     # ----------------------------
     # Debug Display

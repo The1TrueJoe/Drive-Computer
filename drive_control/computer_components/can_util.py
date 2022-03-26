@@ -1,7 +1,6 @@
 # Drive Computer Core Library
-# Cart Control Utilities
 #
-# Utility methods for the modules
+# Utility methods to help with CAN Messages
 #
 # Part of the GSSM Autonomous Golf Cart
 # Written by Joseph Telaak, class of 2022
@@ -30,3 +29,11 @@ def hexToDec(hex):
         i = i + 1
 
     return count
+
+# Remove the ID
+def removeID(message):
+    return message[message.find(")")+2:len(message)]
+
+# Get the ID from the message
+def getID(message):
+    return message[message.find("(")+1:message.find(")")]

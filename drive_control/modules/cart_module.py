@@ -15,11 +15,49 @@ op = "11"
 # Get request
 get = "12"
 
+# Data Length
+dlc = 8
+
 # Fill the rest of the message with zeroes
 def fill(count):
     filled = ""
     
     for i in range(count + 1):
-        filled += "C "
+        filled += "0 "
 
     return filled.substring(0, len(filled) - 1)
+
+# Splits the message into its components
+def splitMessage(message):
+    return message.split(" ")
+
+# Checks if the message is a response
+def isResponseMessage(split_message):
+    if len(split_message) != 8:
+        return False
+
+    else:
+        if split_message[0] == get and split_message[1] == get:
+            return True
+
+        else:
+            return False
+
+# Checks if the message is a response
+def isResponseMessage(incoming_message, expected_message):
+    expected_message = splitMessage(expected_message)
+    incoming_message = splitMessage(incoming_message)
+
+    for i in expected_message:
+        if expected_message[i] != incoming_message[i]:
+            return False
+
+    return True
+
+# Interprets message if the byte is a boolean condition
+def getAsBoolean(message_byte):
+    if (message_byte == 1):
+        return True
+
+    else:
+        return False
