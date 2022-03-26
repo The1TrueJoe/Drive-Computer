@@ -23,39 +23,80 @@ from drive_control.modules.speed_ctrl import Speed_Controller
 class MyCart:
 
     def __init__(self):
+        # Setup the message logging
+        self.logger = logging.getLogger("hardware_manager")
+        file_handler = logging.FileHandler("logs/hardware_manager.log")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(threadName)s - %(message)s"))
+        self.logger.addHandler(file_handler)
+
         # Assign the Modules
+        self.logger.info("Preparing to Initialize Hardware Manager")
         self.direction_controller = Direction_Controller(can_address = "4081")
         self.accessory_controller = Accessory_Controller(can_address = "4082")
         self.speed_controller = Speed_Controller(can_address = "4083")
 
-        # Setup the message logging
-        logging.basicConfig(filename='my_cart.log', filemode='w', format=' %(asctime)s - %(message)s')
-
         # CAN Adapter
         self.can_adapter = CAN_Adapter()
 
-        # Accelerometer
+        # Sensors
         self.accelerometer = Accelerometer()
 
-        # Start Message RX Processing
-        listener = threading.Thread(target=self.listen, daemon=True)
-        listener.start()
+        # Sub-Threads 
+        self.listener = threading.Thread(target=self.listen, name="message_listener", daemon=True)   # Start Message RX Processing
+        self.perodic = threading.Thread(target=self.periodic, name="periodic_updater", daemon=True)  # Start Perodic Update Requests
 
-        # Start Perodic Update Requests
-        perodic = threading.Thread(target=self.periodic, daemon=True)
-        perodic.start()
+
+
+        # Init Message
+        self.logger.info("Hardware Manager Initialization Preparation Complete")
+        
+
+    def intialize(self):
+        # Init Message
+        self.logger.info("Initializing Hardware Manager")
+
+        # Starting listener thread
+        self.listener.start()
+
+        # Wait for all modules
+        self.logger.info("Waiting for all modules to annouce ready")
+        while not self.direction_controller.isReady(self.can_adapter.read()):
+            time.sleep(1)
+        while not self.accessory_controller.isReady(self.can_adapter.read()):
+            time.sleep(1)
+        while not self.speed_controller.isReady(self.can_adapter.read()):
+            time.sleep(1)
+        self.logger.info("All Modules Ready")
+
+        # Enable all Modules
+        self.logger.info("Sending enable message to modules")
+        self.can_adapter.write(self.direction_controller.enable())
+        self.can_adapter.write(self.accessory_controller.enable())
+        self.can_adapter.write(self.speed_controller.enable())
+
+        # Start Periodic Updater
+        self.perodic.start()
+
+        # Init Message
+        self.logger.info("Hardware Manager Initialization Complete")
+
 
     # ----------------------------
     # Threads
     # ----------------------------
 
     def listen(self):
-        message = self.can_adapter.read()
+        self.logger.info("CAN Listener Thread Starting")
 
-        if (message != ""):
-            self.processMessage(message = message)
+        while True:
+            message = self.can_adapter.read()
+
+            if (message != ""):
+                self.processMessage(message = message)
 
     def periodic(self):
+        self.logger.info("Cart Periodic Updater Thread Starting")
+
         while True:
             time.sleep(100)
 

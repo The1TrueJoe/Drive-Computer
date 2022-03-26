@@ -18,6 +18,10 @@ get = "12"
 # Data Length
 dlc = 8
 
+# Enable Message
+enable_message = "170 171 172 173 174 160 161 162"
+ready_message = "170 170 170 170 170 170 170 170"
+
 # Fill the rest of the message with zeroes
 def fill(count):
     filled = ""

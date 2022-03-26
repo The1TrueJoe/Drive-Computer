@@ -1,3 +1,4 @@
+import can_util as util
 import cart_module as m
 import logging
 
@@ -29,8 +30,25 @@ class Speed_Controller:
         self.auto_buzzer_mode = self.Auto_Buzzer(can_address=self.can_address)
 
         # Setup the message logging
-        logging.basicConfig(filename='speed_ctrl.log', filemode='w', format=' %(asctime)s - %(message)s')
+        self.logger = logging.getLogger("speed_controller")
+        file_handler = logging.FileHandler("logs/speed_ctrl.log")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+        self.logger.addHandler(file_handler)
 
+
+    # Check if the ready message is received
+    def isReady(self, message):
+        if util.removeID(message) == m.ready_message:
+            self.logger.info("Module is Ready")
+            return True
+
+        else:
+            return False
+
+    # Send the Module Enable Message
+    def enable(self):
+        self.logger.info("Sending Module Enable Message")
+        return f"({self.can_address}) {m.enable_message}"
 
     class Digital_Accelerator:
         

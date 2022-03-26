@@ -1,13 +1,22 @@
+from drive.drive import Mode
+
+
 class Teleop:
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, cart):
+        self.kill = False
+        self.mode = Mode.Auto
+        self.my_cart = cart
 
     def initialize(self):
-        pass
+        self.my_cart.applyManual()
 
     def perodic(self):
-        pass
+        while not self.kill:
+            pass
+
+    def kill(self):
+        self.kill = True
 
     def exit(self):
-        pass
+        self.my_cart.completeStop()

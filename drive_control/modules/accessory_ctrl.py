@@ -1,3 +1,4 @@
+import can_util as util
 import cart_module as m
 import logging
 
@@ -22,6 +23,15 @@ class Accessory_Controller:
     def __int__(self, can_address = "4082", right_signal = "1", left_signal = "2", head_light = "3", tail_light = "4", horn = "5", rear_buzzer = "6"):
         # CAN Address
         self.can_address = can_address
+
+        # Setup the message logging
+        self.logger = logging.getLogger("accessory_controller")
+        file_handler = logging.FileHandler("logs/accessory_ctrl.log")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+        self.logger.addHandler(file_handler)
+
+        # Init Message
+        self.logger(f"Initializing Accessory Controller at address: {self.can_address}")
         
         # Components
         self.right_signal = self.Right_Signal(can_address=self.can_address, id=right_signal)
@@ -31,8 +41,20 @@ class Accessory_Controller:
         self.horn = self.Horn(can_address=self.can_address, id=horn)
         self.rear_buzzer = self.Rear_Buzzer(can_address=self.can_address, id=rear_buzzer)
 
-        # Setup the message logging
-        logging.basicConfig(filename='accessory_ctrl.log', filemode='w', format=' %(asctime)s - %(message)s')
+
+    # Check if the ready message is received
+    def isReady(self, message):
+        if util.removeID(message) == m.ready_message:
+            self.logger.info("Module is Ready")
+            return True
+
+        else:
+            return False
+
+    # Send the Module Enable Message
+    def enable(self):
+        self.logger.info("Sending Module Enable Message")
+        return f"({self.can_address}) {m.enable_message}"
 
     # ----------------------------
     # Right Turn Signal
@@ -50,22 +72,22 @@ class Accessory_Controller:
 
         # Blink the Right Signal
         def blink(self, interval = "200", multiplier = "1"):
-            logging.debug(f"Blink Right Signal {util.multiHexToDec(interval, multiplier)}ms")
+            self.logger.debug(f"Blink Right Signal {util.multiHexToDec(interval, multiplier)}ms")
             return f"({self.can_address}) {m.op} {self.right_signal} {interval} {multiplier} {m.fill(4)}"
 
         # Turn on the Right Signal
         def on(self):
-            logging.debug("Turn On Right Signal")
+            self.logger.debug("Turn On Right Signal")
             return f"({self.can_address}) {m.set} {self.right_signal} 1 {m.fill(5)}"
 
         # Turn off the Right Signal
         def off(self):
-            logging.debug("Turn Off Right Signal")
+            self.logger.debug("Turn Off Right Signal")
             return f"({self.can_address}) {m.set} {self.right_signal} 2 {m.fill(5)}"
 
         # Request the Right Signal Setting
         def get(self):
-            logging.debug("Get Right Signal Setting")
+            self.logger.debug("Get Right Signal Setting")
             return f"({self.can_address}) {m.get} {self.right_signal} {m.fill(6)}"
 
         # Check if the message matches the response
@@ -93,22 +115,22 @@ class Accessory_Controller:
 
         # Blink the Left Signal
         def blink(self, interval = "200", multiplier = "1"):
-            logging.debug(f"Blink Left Signal {util.multiHexToDec(interval, multiplier)}ms")
+            self.logger.debug(f"Blink Left Signal {util.multiHexToDec(interval, multiplier)}ms")
             return f"({self.can_address}) {m.op} {self.left_signal} {interval} {multiplier} {m.fill(4)}"
 
         # Turn on the Left Signal
         def on(self):
-            logging.debug("Turn On Left Signal")
+            self.logger.debug("Turn On Left Signal")
             return f"({self.can_address}) {m.set} {self.left_signal} 1 {m.fill(5)}"
 
         # Turn off the Left Signal
         def off(self):
-            logging.debug("Turn Off Left Signal")
+            self.logger.debug("Turn Off Left Signal")
             return f"({self.can_address}) {m.set} {self.left_signal} 2 {m.fill(5)}"
 
         # Request the Left Signal Setting
         def get(self):
-            logging.debug("Get Left Signal Setting")
+            self.logger.debug("Get Left Signal Setting")
             return f"({self.can_address}) {m.get} {self.left_signal} {m.fill(6)}"
 
         # Check if the message matches the response
@@ -136,22 +158,22 @@ class Accessory_Controller:
 
         # Blink the Head Lights
         def blink(self, interval = "200", multiplier = "1"):
-            logging.debug(f"Blink Head Lights {util.multiHexToDec(interval, multiplier)}ms")
+            self.logger.debug(f"Blink Head Lights {util.multiHexToDec(interval, multiplier)}ms")
             return f"({self.can_address}) {m.op} {self.head_lights} {interval} {multiplier} {m.fill(4)}"
 
         # Turn on the Head Lights
         def on(self):
-            logging.debug("Turn On Head Lights")
+            self.logger.debug("Turn On Head Lights")
             return f"({self.can_address}) {m.set} {self.head_lights} 1 {m.fill(5)}"
 
         # Turn off the Head Lights
         def off(self):
-            logging.debug("Turn Off Head Lights")
+            self.logger.debug("Turn Off Head Lights")
             return f"({self.can_address}) {m.set} {self.head_lights} 2 {m.fill(5)}"
 
         # Request the Head Light Setting
         def get(self):
-            logging.debug("Get Head Light Setting")
+            self.logger.debug("Get Head Light Setting")
             return f"({self.can_address}) {m.get} {self.head_lights} {m.fill(6)}"
 
         # Check if the message matches the response
@@ -179,22 +201,22 @@ class Accessory_Controller:
 
         # Blink the Tail Lights
         def blink(self, interval = "200", multiplier = "1"):
-            logging.debug(f"Blink Tail Lights {util.multiHexToDec(interval, multiplier)}ms")
+            self.logger.debug(f"Blink Tail Lights {util.multiHexToDec(interval, multiplier)}ms")
             return f"({self.can_address}) {m.op} {self.tail_lights} {interval} {multiplier} {m.fill(4)}"
 
         # Turn on the Tail Lights
         def on(self):
-            logging.debug("Turn On Tail Lights")
+            self.logger.debug("Turn On Tail Lights")
             return f"({self.can_address}) {m.set} {self.tail_lights} 1 {m.fill(5)}"
 
         # Turn off the Tail Lights
         def off(self):
-            logging.debug("Turn Off Tail Lights")
+            self.logger.debug("Turn Off Tail Lights")
             return f"({self.can_address}) {m.set} {self.tail_lights} 2 {m.fill(5)}"
 
         # Request the Tail Light Setting
         def get(self):
-            logging.debug("Get Tail Light Setting")
+            self.logger.debug("Get Tail Light Setting")
             return f"({self.can_address}) {m.get} {self.tail_lights} {m.fill(6)}"
 
         # Check if the message matches the response
@@ -223,22 +245,22 @@ class Accessory_Controller:
 
         # Honk the Horn
         def honk(self, interval = "50", multiplier = "1"):
-            logging.debug(f"Honk Horn {util.multiHexToDec(interval, multiplier)}ms")
+            self.logger.debug(f"Honk Horn {util.multiHexToDec(interval, multiplier)}ms")
             return f"({self.can_address}) {m.op} {self.horn} {interval} {multiplier} {m.fill(4)}"
 
         # Turn on the horn
         def on(self):
-            logging.debug("Turn on Horn")
+            self.logger.debug("Turn on Horn")
             return f"({self.can_address}) {m.set} {self.horn} 1 {m.fill(5)}"
 
         # Turn off the horn
         def off(self):
-            logging.debug("Turn Off Horn")
+            self.logger.debug("Turn Off Horn")
             return f"({self.can_address}) {m.set} {self.horn} 2 {m.fill(5)}"
 
         # Request the horn status
         def get(self):
-            logging.debug("Get Horn Status")
+            self.logger.debug("Get Horn Status")
             return f"({self.can_address}) {m.get} {self.horn} {m.fill(6)}"
 
         # Check if the message matches the response
@@ -266,17 +288,17 @@ class Accessory_Controller:
 
         # Turn on the Rear Buzzer
         def on(self):
-            logging.debug("Turning on Rear Buzzer")
+            self.logger.debug("Turning on Rear Buzzer")
             return f"({self.can_address}) {m.set} {self.rear_buzzer} 1 {m.fill(5)}"
 
         # Turn off the Rear Buzzer
         def off(self):
-            logging.debug("Turning Off Rear Buzzer")
+            self.logger.debug("Turning Off Rear Buzzer")
             return f"({self.can_address}) {m.set} {self.rear_buzzer} 2 {m.fill(5)}"
 
         # Request the Rear Buzzer status
         def get(self):
-            logging.debug("Get Rear Buzzer Status")
+            self.logger.debug("Get Rear Buzzer Status")
             return f"({self.can_address}) {m.get} {self.rear_buzzer} {m.fill(6)}"
 
         # Check if the message matches the response

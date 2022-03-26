@@ -1,3 +1,4 @@
+import can_util as util
 import cart_module as m
 import logging
 
@@ -24,7 +25,25 @@ class Direction_Controller:
         self.brake_motor = self.Brake_Motor(can_address=self.can_address)
 
         # Setup the message logging
-        logging.basicConfig(filename='direction_ctrl.log', filemode='w', format=' %(asctime)s - %(message)s')
+        self.logger = logging.getLogger("direction_controller")
+        file_handler = logging.FileHandler("logs/direction_ctrl.log")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+        self.logger.addHandler(file_handler)
+
+
+    # Check if the ready message is received
+    def isReady(self, message):
+        if util.removeID(message) == m.ready_message:
+            self.logger.info("Module is Ready")
+            return True
+
+        else:
+            return False
+
+    # Send the Module Enable Message
+    def enable(self):
+        self.logger.info("Sending Module Enable Message")
+        return f"({self.can_address}) {m.enable_message}"
 
     
     # ----------------------------
@@ -38,16 +57,16 @@ class Direction_Controller:
 
         # Disable Steering Motor
         def disable(self):
-            logging.debug("Disabling Steering Motor")
+            self.logger.debug("Disabling Steering Motor")
             return f"({self.can_address}) {m.set} 1 10 1 {m.fill(4)}"
 
         # Enable Steering Motor
         def enable(self):
-            logging.debug("Enabling Steering Motor")
+            self.logger.debug("Enabling Steering Motor")
             return f"({self.can_address}) {m.set} 1 10 2 {m.fill(4)}"
 
         def reqStatus(self):
-            logging.debug("Requesting the Steering Motor Status")
+            self.logger.debug("Requesting the Steering Motor Status")
             return f"({self.can_address}) {m.get} 1 10 {m.fill(5)}"
 
         def checkStatusResponse(self, message):
