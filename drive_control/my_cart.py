@@ -134,6 +134,7 @@ class MyCart:
     # ----------------------------
 
     def brake(self):
+        self.setSpeed(0)
         self.can_adapter.write(self.direction_controller.enableBrakeMotor())
         self.can_adapter.write(self.direction_controller.runBrakeMotorForwards(power = 255))
 
