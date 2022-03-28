@@ -1,5 +1,17 @@
+# Connection to CAN
 serial
+
+# General Operations
 logging
 socket
 threading
+sys
+
+# Util
 pyfiglet
+
+# Sensors
+hokuyolx
+
+# Mapping
+matplotlib

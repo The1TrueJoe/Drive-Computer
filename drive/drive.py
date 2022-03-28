@@ -3,9 +3,9 @@ import threading
 import logging
 import time
 
-from drive.auto import Auto
-from drive.disabled import Disabled
-from drive.manual import Manual
+from drive.auto.auto import Auto
+from drive.disabled.disabled import Disabled
+from drive.manual.manual import Manual
 from drive.teleop.teleop import Teleop
 
 from drive_control.my_cart import MyCart
