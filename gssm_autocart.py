@@ -7,6 +7,12 @@ import logging
 # Drive Computer Core Library
 # Main
 #
+# This module controls the lights and horn.
+#   - It also monitors the brake switch as that is normally considered 
+#     a part of the accessory system (usually used to engage tail lights on braking)
+#
+# Hardware definition class to store messages for this module
+#
 # Part of the GSSM Autonomous Golf Cart
 # Written by Joseph Telaak, class of 2022
 

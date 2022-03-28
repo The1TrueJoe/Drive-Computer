@@ -45,8 +45,6 @@ class MyCart:
         self.listener = threading.Thread(target=self.listen, name="message_listener", daemon=True)   # Start Message RX Processing
         self.perodic = threading.Thread(target=self.periodic, name="periodic_updater", daemon=True)  # Start Perodic Update Requests
 
-
-
         # Init Message
         self.logger.info("Hardware Manager Initialization Preparation Complete")
         
@@ -57,7 +55,7 @@ class MyCart:
 
         # Starting listener thread
         self.listener.start()
-
+    
         # Wait for all modules
         self.logger.info("Waiting for all modules to annouce ready")
         while not self.direction_controller.isReady(self.can_adapter.read()):
@@ -87,7 +85,7 @@ class MyCart:
 
     def listen(self):
         self.logger.info("CAN Listener Thread Starting")
-
+        
         while True:
             message = self.can_adapter.read()
 
@@ -108,14 +106,20 @@ class MyCart:
     # ----------------------------
 
     def applyManual(self):
+        self.completeStop()
+  
         self.can_adapter.write(self.speed_controller.setManualInput())
         self.can_adapter.write(self.direction_controller.setWheelInputSteering())
 
     def applyAuto(self):
+        self.completeStop()
+
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
         
     def applyTeleop(self):
+        self.completeStop()
+
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
 
