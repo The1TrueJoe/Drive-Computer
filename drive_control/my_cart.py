@@ -108,20 +108,14 @@ class MyCart:
     # ----------------------------
 
     def applyManual(self):
-        self.completeStop()
-
         self.can_adapter.write(self.speed_controller.setManualInput())
         self.can_adapter.write(self.direction_controller.setWheelInputSteering())
 
     def applyAuto(self):
-        self.completeStop()
-
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
         
     def applyTeleop(self):
-        self.completeStop()
-
         self.can_adapter.write(self.speed_controller.setComputerInput())
         self.can_adapter.write(self.direction_controller.setControlledSteering())
 
