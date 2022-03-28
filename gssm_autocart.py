@@ -5,7 +5,7 @@ import sys
 import logging
 
 # Drive Computer Core Library
-# Accessory Controller Module
+# Main
 #
 # This module controls the lights and horn.
 #   - It also monitors the brake switch as that is normally considered 
