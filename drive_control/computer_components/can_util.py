@@ -30,6 +30,15 @@ def hexToDec(hex):
 
     return count
 
+# Convert a 16bit integer to 2 8bit integers
+def sixteentoeight(message):
+    num = int(message)
+
+    coarse = (num >> 8) & 0xff
+    fine = num & 0xff
+
+    return {coarse, fine}
+
 # Remove the ID
 def removeID(message):
     return message[message.find(")")+2:len(message)]
