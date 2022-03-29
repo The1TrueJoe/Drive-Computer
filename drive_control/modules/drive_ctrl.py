@@ -16,7 +16,7 @@ import logging
 # Part of the GSSM Autonomous Golf Cart
 # Written by Joseph Telaak, class of 2022
 
-class Speed_Controller:
+class Drive_Controller:
 
     def __int__(self, can_address = 4083):
         # CAN Address
@@ -30,8 +30,8 @@ class Speed_Controller:
         self.auto_buzzer_mode = self.Auto_Buzzer(can_address=self.can_address)
 
         # Setup the message logging
-        self.logger = logging.getLogger("speed_controller")
-        file_handler = logging.FileHandler("logs/speed_ctrl.log")
+        self.logger = logging.getLogger("drive_controller")
+        file_handler = logging.FileHandler("logs/drive_ctrl.log")
         file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
         self.logger.addHandler(file_handler)
 
