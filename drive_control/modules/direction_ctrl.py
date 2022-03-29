@@ -18,18 +18,17 @@ class Direction_Controller:
         # CAN Address
         self.can_address = can_address
 
-        # Components
-        self.steering_motor = self.Steering_Motor(can_address=self.can_address)
-        self.steering_mode = self.Steering_Mode(can_address=self.can_address)
-        self.wheel_input = self.Wheel(can_address=self.can_address)
-        self.brake_motor = self.Brake_Motor(can_address=self.can_address)
-
         # Setup the message logging
         self.logger = logging.getLogger("direction_controller")
         file_handler = logging.FileHandler("logs/direction_ctrl.log")
         file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
         self.logger.addHandler(file_handler)
 
+        # Components
+        self.steering_motor = self.Steering_Motor(can_address=self.can_address, logger=self.logger)
+        self.steering_mode = self.Steering_Mode(can_address=self.can_address, logger=self.logger)
+        self.wheel_input = self.Wheel(can_address=self.can_address, logger=self.logger)
+        self.brake_motor = self.Brake_Motor(can_address=self.can_address, logger=self.logger)
 
     # Check if the ready message is received
     def isReady(self, message):
@@ -52,8 +51,9 @@ class Direction_Controller:
 
     class Steering_Motor:
 
-        def __init__(self, can_address):
+        def __init__(self, can_address, logger):
             self.can_address = can_address
+            self.logger = logger
 
         # Disable Steering Motor
         def disable(self):
@@ -75,17 +75,25 @@ class Direction_Controller:
         def readStatus(self, message):
             pass
 
+        # Run Motor Forwards
         def forwards(self, power = 255):
-            pass
+            self.logger.debug(f"Running Steering Motor Forwards, Power: {power}")
+            return f"({self.can_address}) {m.set} 1 12 1 {power} {m.fill(3)}"
 
+        # Run Motor Backwards
         def backwards(self, power = 255):
-            pass
+            self.logger.debug(f"Running Steering Motor Backwards, Power: {power}")
+            return f"({self.can_address}) {m.set} 1 12 2 {power} {m.fill(3)}"
 
+        # Run the motor to the position
         def setPos(self, pos):
-            pass
+            self.logger.debug(f"Running Steering Motor to Position, Pos: {pos}")
+            return f"({self.can_address}) {m.op} 1 {util.sixteentoeight(pos)[0]} {util.sixteentoeight(pos)[1]} {m.fill(3)}"
 
+        # Request the steering motor position
         def reqPos(self):
-            pass
+            self.logger.debug("Requesting to Current Steering Motor Position")
+            return f"({self.can_address}) {m.get} 1 16 {m.fill(5)}"
     
     # ----------------------------
     # Steering Mode
@@ -93,17 +101,24 @@ class Direction_Controller:
 
     class Steering_Mode:
 
-        def __init__(self, can_address):
+        def __init__(self, can_address, logger):
             self.can_address = can_address
+            self.logger = logger
 
+        # Set to computer controlled steering
         def setControlledSteering(self):
-            pass
+            self.logger.debug("Set to Controlled Steering")
+            return f"({self.can_address}) {m.set} 1 13 2 {m.fill(4)}"
 
+        # Set to wheel input steering
         def setWheelInputSteering(self):
-            pass
+            self.logger.debug("Set to Wheel Input Steering")
+            return f"({self.can_address}) {m.set} 1 13 1 {m.fill(4)}"
 
+        # Requesting steering mode
         def reqSteeringMode(self):
-            pass
+            self.logger.debug("Requesting Steering Mode")
+            return f"({self.can_address}) {m.get} 1 13 {m.fill(5)}"
 
     # ----------------------------
     # Steering Wheel Input
@@ -111,8 +126,9 @@ class Direction_Controller:
 
     class Wheel:
 
-        def __init__(self, can_address):
+        def __init__(self, can_address, logger):
             self.can_address = can_address
+            self.logger = logger
 
         def getPos(self):
             pass
@@ -122,8 +138,9 @@ class Direction_Controller:
 
     class Brake_Motor:
 
-        def __init__(self, can_address):
+        def __init__(self, can_address, logger):
             self.can_address = can_address
+            self.logger = logger
 
         def disable(self):
             pass

@@ -34,12 +34,12 @@ class Accessory_Controller:
         self.logger(f"Initializing Accessory Controller at address: {self.can_address}")
         
         # Components
-        self.right_signal = self.Right_Signal(can_address=self.can_address, id=right_signal)
-        self.left_signal = self.Left_Signal(can_address=self.can_address, id=left_signal)
-        self.head_light = self.Head_Lights(can_address=self.can_address, id=head_light)
-        self.tail_light = self.Tail_Lights(can_address=self.can_address, id=tail_light)
-        self.horn = self.Horn(can_address=self.can_address, id=horn)
-        self.rear_buzzer = self.Rear_Buzzer(can_address=self.can_address, id=rear_buzzer)
+        self.right_signal = self.Right_Signal(can_address=self.can_address, id=right_signal, logger=self.logger)
+        self.left_signal = self.Left_Signal(can_address=self.can_address, id=left_signal, logger=self.logger)
+        self.head_light = self.Head_Lights(can_address=self.can_address, id=head_light, logger=self.logger)
+        self.tail_light = self.Tail_Lights(can_address=self.can_address, id=tail_light, logger=self.logger)
+        self.horn = self.Horn(can_address=self.can_address, id=horn, logger=self.logger)
+        self.rear_buzzer = self.Rear_Buzzer(can_address=self.can_address, id=rear_buzzer, logger=self.logger)
 
 
     # Check if the ready message is received
@@ -63,9 +63,9 @@ class Accessory_Controller:
     class Right_Signal:
 
         # Constructor
-        def __init__(self, can_address, id):
-            # CAN Address
+        def __init__(self, can_address, logger):
             self.can_address = can_address
+            self.logger = logger
 
             # ID
             self.right_signal = id
@@ -106,9 +106,9 @@ class Accessory_Controller:
     class Left_Signal:
 
         # Constructor
-        def __init__(self, can_address, id):
-            # CAN Address
+        def __init__(self, can_address, id, logger):
             self.can_address = can_address
+            self.logger = logger
 
             # ID
             self.left_signal = id
@@ -149,9 +149,9 @@ class Accessory_Controller:
     class Head_Lights:
 
         # Constructor
-        def __init__(self, can_address, id):
-            # CAN Address
+        def __init__(self, can_address, id, logger):
             self.can_address = can_address
+            self.logger = logger
 
             # ID
             self.head_lights = id
@@ -192,9 +192,9 @@ class Accessory_Controller:
     class Tail_Lights:
 
         # Constructor
-        def __init__(self, can_address, id):
-            # CAN Address
+        def __init__(self, can_address, id, logger):
             self.can_address = can_address
+            self.logger = logger
 
             # ID
             self.tail_lights = id
@@ -235,9 +235,9 @@ class Accessory_Controller:
     class Horn:
 
         # Constructor
-        def __init__(self, can_address, id):
-            # CAN Address
+        def __init__(self, can_address, id, logger):
             self.can_address = can_address
+            self.logger = logger
 
             # ID
             self.horn = id
@@ -279,9 +279,9 @@ class Accessory_Controller:
     class Rear_Buzzer:
 
         # Constructor
-        def __init__(self, can_address, id):
-            # CAN Address
+        def __init__(self, can_address, id, logger):
             self.can_address = can_address
+            self.logger = logger
 
             # ID
             self.rear_buzzer = id
