@@ -13,7 +13,7 @@ from drive.teleop.controller import Gamepad
 
 class Remote_Drive_Server:
 
-    def __init__(self, gamepad=Gamepad(), establish_port=42069, command_port=69, log_port=420, response_port=777):
+    def __init__(self, gamepad=Gamepad(), establish_port=42070, command_port=70, log_port=421, response_port=778):
         # Kill
         self.kill = False
         self.connection_established = False

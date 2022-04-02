@@ -44,6 +44,22 @@ class Drive:
 
             # Init Message
             self.logger.info("Pre-Initialization Complete")
+
+        # Teleop
+        def teleop(self):
+            self.mode = Mode.TELEOP
+
+        # Manual
+        def manual(self):
+            self.mode = Mode.MANUAL
+
+        # Auto
+        def auto(self):
+            self.mode = Mode.AUTO
+
+        # Disable
+        def disable(self):
+            self.mode = Mode.DISABLED
             
         # Initialize the drive system and hardware
         def initialize(self):

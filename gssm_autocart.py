@@ -16,6 +16,8 @@ import logging
 # Part of the GSSM Autonomous Golf Cart
 # Written by Joseph Telaak, class of 2022
 
+drive = None
+
 def main():
     print(util.to_color(util.title, "cyan"))
     print(util.info_block)
