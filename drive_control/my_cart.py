@@ -4,9 +4,9 @@ import time
 
 from drive.drive import Mode
 
-from drive_control.computer_components.accelerometer import Accelerometer
 from drive_control.computer_components.can_adapter import CAN_Adapter
-import drive_control.computer_components.computer_lcd as LCD
+from drive_control.computer_components.computer_lcd import LCD
+from drive_control.computer_components.mpu import MPU
 
 from drive_control.modules.accessory_ctrl import Accessory_Controller
 from drive_control.modules.direction_ctrl import Direction_Controller
@@ -35,11 +35,10 @@ class MyCart:
         self.accessory_controller = Accessory_Controller(can_address = "4082")
         self.drive_controller = Drive_Controller(can_address = "4083")
 
-        # CAN Adapter
-        self.can_adapter = CAN_Adapter()
-
-        # Sensors
-        self.accelerometer = Accelerometer()
+        # Internal Hardware
+        self.can_adapter = CAN_Adapter(serial_port='/dev/ttyUSB0')
+        self.lcd = LCD(serial_port='/dev/ttyUSB1')
+        self.mpu = MPU(serial_port='/dev/ttyUSB2')
 
         # Sub-Threads 
         self.listener = threading.Thread(target=self.listen, name="message_listener", daemon=True)   # Start Message RX Processing
