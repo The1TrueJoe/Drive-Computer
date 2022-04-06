@@ -288,19 +288,3 @@ class MyCart:
     def honk(self):
         self.can_adapter.write(self.accessory_controller.horn.honk())
 
-    # ----------------------------
-    # Debug Display
-    # ----------------------------
-
-    def debugDisplayOn(self):
-        self.can_adapter.send_string_to_adapter(LCD.on)
-
-    def debugDisplayOff(self):
-        self.can_adapter.send_string_to_adapter(LCD.off)
-
-    def debugDisplayClear(self):
-        self.can_adapter.send_string_to_adapter(LCD.clear)
-
-    def debugDisplay(self, line_num, message):
-        self.can_adapter.send_string_to_adapter(LCD.display(message = message, line_num = line_num))
-
