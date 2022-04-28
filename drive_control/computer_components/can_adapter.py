@@ -56,7 +56,7 @@ class CAN_Adapter:
 
     def send_string_to_adapter(self, message):
         self.logger.debug("MAN: " + message)
-        self.arduino.write(message)
+        self.arduino.write(message.encode())
 
 
     # Read received CAN message
@@ -78,7 +78,6 @@ class CAN_Adapter:
 
         return ""
 
-
     # Send CAN message
     #
     # id: 32-bit CAN Bus ID
@@ -87,7 +86,6 @@ class CAN_Adapter:
     def write(self, id, data):
         # Check Message Size
         if len(data) != 8:
-            self.logger.warning(f"Invalid Message Size {len(data)}")
             return
 
         # Format Message
@@ -97,10 +95,17 @@ class CAN_Adapter:
 
         # Send message as String
         output = f"({id}) {formatted_data}"
-        self.logger.debug(f"TX: {output}")
-        self.arduino.write(f"CMD-Send: {output}")
+        self.write(output)
 
     # Send CAN message
     def write(self, message):
         self.logger.debug(f"TX: {message}")
-        self.arduino.write(f"CMD-Send: {message}")
+        self.arduino.write((f">{message}").encode())
+
+# List all available ports
+def printPorts():
+    import serial.tools.list_ports
+    ports = serial.tools.list_ports.comports()
+
+    for port, desc, hwid in sorted(ports):
+        print("{}: {} [{}]".format(port, desc, hwid))
