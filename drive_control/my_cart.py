@@ -31,9 +31,9 @@ class MyCart:
 
         # Assign the Modules
         self.logger.info("Preparing to Initialize Hardware Manager")
-        self.direction_controller = Direction_Controller(can_address = "4081")
-        self.accessory_controller = Accessory_Controller(can_address = "4082")
-        self.drive_controller = Drive_Controller(can_address = "4083")
+        self.direction_controller = Direction_Controller(can_address = "1")
+        self.accessory_controller = Accessory_Controller(can_address = "2")
+        self.drive_controller = Drive_Controller(can_address = "3")
 
         # Internal Hardware
         self.can_adapter = CAN_Adapter(serial_port='/dev/ttyUSB0')
@@ -42,37 +42,7 @@ class MyCart:
 
         # Sub-Threads 
         self.listener = threading.Thread(target=self.listen, name="message_listener", daemon=True)   # Start Message RX Processing
-        self.perodic = threading.Thread(target=self.periodic, name="periodic_updater", daemon=True)  # Start Perodic Update Requests
-
-        # Message Processing
-        self.update_list = {
-            "set speed": self.drive_controller.digital_accelerator.reqPos,
-            "direction": self.drive_controller.direction_controller.reqDirection,
-            "speed input": self.drive_controller.input_mode_controller.reqMode,
-
-
-        }
-
-        self.check_list = {
-            "set speed": self.drive_controller.digital_accelerator.checkPosResponse,
-            "forwards": self.drive_controller.direction_controller.checkDirectionResponse,
-            "reverse": self.drive_controller.direction_controller.checkDirectionResponse,
-            "manual speed input": self.drive_controller.input_mode_controller.checkModeResponse,
-            "computer speed input": self.drive_controller.input_mode_controller.checkModeResponse,
-            
-
-        }
-
-        self.get_list = {
-            "set speed": self.drive_controller.digital_accelerator.readPosResponse,
-            "forwards": self.drive_controller.direction_controller.isForwards,
-            "reverse": self.drive_controller.direction_controller.isReverse,
-            "manual speed input": self.drive_controller.input_mode_controller.isManual,
-            "computer speed input": self.drive_controller.input_mode_controller.isComputer,
-
-
-        }
-
+        
         self.vars = {
             "set speed": 0,
             "forwards": True,
@@ -90,25 +60,6 @@ class MyCart:
 
         # Starting listener thread
         self.listener.start()
-    
-        # Wait for all modules
-        self.logger.info("Waiting for all modules to annouce ready")
-        while not self.direction_controller.isReady(self.can_adapter.read()):
-            time.sleep(1)
-        while not self.accessory_controller.isReady(self.can_adapter.read()):
-            time.sleep(1)
-        while not self.drive_controller.isReady(self.can_adapter.read()):
-            time.sleep(1)
-        self.logger.info("All Modules Ready")
-
-        # Enable all Modules
-        self.logger.info("Sending enable message to modules")
-        self.can_adapter.write(self.direction_controller.enable())
-        self.can_adapter.write(self.accessory_controller.enable())
-        self.can_adapter.write(self.drive_controller.enable())
-
-        # Start Periodic Updater
-        self.perodic.start()
 
         # Init Message
         self.logger.info("Hardware Manager Initialization Complete")
@@ -136,19 +87,6 @@ class MyCart:
         for update_check in self.check_list.keys():
             if self.check_list[update_check](message=message):
                 self.vars[update_check] = self.get_list[update_check](message=message)
-
-    # Periodic loop
-    def periodic(self):
-        self.logger.info("Cart Periodic Updater Thread Starting")
-
-        # Main Loop
-        while True:
-            # Complete Period
-            time.sleep(10)
-
-            # Update loop
-            for update in self.update_list.keys():
-                self.can_adapter.write(self.update_list[update]())
 
     # ----------------------------
     # Mode
