@@ -1,14 +1,5 @@
 # Connection to CAN
-serial
-
-# General Operations
-logging
-socket
-threading
-sys
-
-# Util
-pyfiglet
+pyserial==3.3
 
 # Sensors
 hokuyolx
