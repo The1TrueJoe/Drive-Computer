@@ -19,9 +19,6 @@ import logging
 drive = None
 
 def main():
-    print(util.to_color(util.title, "cyan"))
-    print(util.info_block)
-
     # Setup the message logging
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)

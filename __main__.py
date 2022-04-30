@@ -19,6 +19,10 @@ if __name__ == "__main__":
         print(f"The GSSM Auto Golf Cart Drive Computer Software Requires Python 3. You are using {python_version}")
         sys.exit(1)
 
+        # Banner and Info Block
+    print(util.to_color(util.title, "cyan"))
+    print(util.info_block)
+
     # Run Program
     import gssm_autocart
     gssm_autocart.main()
