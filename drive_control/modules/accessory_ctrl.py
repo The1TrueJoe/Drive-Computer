@@ -20,7 +20,7 @@ class Accessory_Controller:
     #
     # can_address: CAN Address of the module
 
-    def __int__(self, can_address = 4082, right_signal = "1", left_signal = "2", head_light = "3", tail_light = "4", horn = "5", rear_buzzer = "6"):
+    def __int__(self, can_address = 2, right_signal = "1", left_signal = "2", head_light = "3", tail_light = "4", horn = "5", rear_buzzer = "6"):
         # CAN Address
         self.can_address = can_address
 

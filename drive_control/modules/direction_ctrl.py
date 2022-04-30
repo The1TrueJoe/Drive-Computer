@@ -14,7 +14,7 @@ import logging
 
 class Direction_Controller:
 
-    def __int__(self, can_address = 4081):
+    def __int__(self, can_address = 1):
         # CAN Address
         self.can_address = can_address
 

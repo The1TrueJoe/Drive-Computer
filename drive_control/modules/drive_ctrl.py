@@ -18,7 +18,7 @@ import logging
 
 class Drive_Controller:
 
-    def __int__(self, can_address = 4083):
+    def __int__(self, can_address = 3):
         # CAN Address
         self.can_address = can_address
 
