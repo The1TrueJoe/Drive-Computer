@@ -1,8 +1,12 @@
 # Connection to CAN
 pyserial==3.3
 
+# Figley
+pyfiglet
+
 # Sensors
 hokuyolx
 
 # Mapping
 matplotlib
+numpy

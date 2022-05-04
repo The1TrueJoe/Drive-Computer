@@ -1,6 +1,6 @@
 from drive.drive import Drive
 from drive_control.my_cart import MyCart
-import util
+import DriveComputer.src.util as util
 import sys
 import logging
 
@@ -16,7 +16,7 @@ import logging
 # Part of the GSSM Autonomous Golf Cart
 # Written by Joseph Telaak, class of 2022
 
-drive = None
+drive: Drive = None
 
 def main():
     # Setup the message logging
@@ -46,4 +46,6 @@ def main():
 
     # Run
     drive.run()
+
+    # Done
     logger.info("Shutdown")

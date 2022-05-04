@@ -9,6 +9,30 @@ import logging
 # Part of the GSSM Autonomous Golf Cart
 # Written by Joseph Telaak, class of 2022
 
+# Convert a 16bit integer to 2 8bit integers
+def sixteentoeight_coarse(message: int):
+    return (message >> 8)
+
+def sixteentoeight_fine(message: int):
+    return message & 0xff
+
+def eighttosixteen(coarse: int, fine: int):
+    return coarse | fine << 8
+
+def canbool(message: int):
+    if message == 2: 
+        return 1 
+    else: 
+        return 0
+
+# Remove the ID
+def removeID(message):
+    return message[message.find(")")+2:len(message)]
+
+# Get the ID from the message
+def getID(message):
+    return message[message.find("(")+1:message.find(")")]
+
 class CAN_Adapter:
 
     # Constructor
@@ -66,17 +90,12 @@ class CAN_Adapter:
     def read(self):
         output = self.arduino.readLine()
 
-        if "CAN-RX:" in output:
+        if ">" in output:
             self.logger.debug("RX: " + str(output))
             return str(output).replace("CAN-RX: ", "")
 
-        elif "CAN-TX:" in output:
-            self.logger.debug("TX: " + str(output))
-
         else:
-            self.logger.info("Adapter-Hardware: " + str(output))
-
-        return ""
+            return ""
 
     # Send CAN message
     #
@@ -101,11 +120,3 @@ class CAN_Adapter:
     def write(self, message):
         self.logger.debug(f"TX: {message}")
         self.arduino.write((f">{message}").encode())
-
-# List all available ports
-def printPorts():
-    import serial.tools.list_ports
-    ports = serial.tools.list_ports.comports()
-
-    for port, desc, hwid in sorted(ports):
-        print("{}: {} [{}]".format(port, desc, hwid))

@@ -3,9 +3,7 @@ import threading
 import time
 import socket
 
-import cli_functions as fn
-
-import gssm_autocart as main
+import DriveComputer.src.gssm_autocart as main
 
 # Drive Computer
 # CLI Server
@@ -15,7 +13,7 @@ import gssm_autocart as main
 
 class CLI_Server:
 
-    def __init__(self, cart, establish_port=42069, command_port=69, log_port=420, response_port=777):
+    def __init__(self, establish_port=42069, command_port=69, log_port=420, response_port=777):
         # Kill
         self.kill = False
         self.connection_established = False
@@ -45,13 +43,10 @@ class CLI_Server:
         self.current_log_message = "Initializing"
         self.current_response_message = "Initializing"
 
-        # Cart control
-        self.my_cart = cart
-
         # Command map
         self.cmd_map = {
-            "forward": self.my_cart.forwards,
-            "reverse": self.my_cart.reverse,
+            "forward": main.drive.my_cart.forwards,
+            "reverse": main.drive.my_cart.reverse,
             "teleop": main.drive.teleop,
             "auto": main.drive.auto,
             "manual": main.drive.manual,

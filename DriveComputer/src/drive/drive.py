@@ -3,12 +3,12 @@ import threading
 import logging
 import time
 
-from drive.auto.auto import Auto
-from drive.disabled.disabled import Disabled
-from drive.manual.manual import Manual
-from drive.teleop.teleop import Teleop
+from DriveComputer.src.drive_control.my_cart import MyCart
 
-from drive_control.my_cart import MyCart
+from DriveComputer.src.drive.auto.auto import Auto
+from DriveComputer.src.drive.disabled.disabled import Disabled
+from DriveComputer.src.drive.manual.manual import Manual
+from DriveComputer.src.drive.teleop.teleop import Teleop
 
 class Mode(enum.Enum):
         AUTO = 1
@@ -47,19 +47,19 @@ class Drive:
 
         # Teleop
         def teleop(self):
-            self.mode = Mode.TELEOP
+            self.setMode(Mode.TELEOP)
 
         # Manual
         def manual(self):
-            self.mode = Mode.MANUAL
+            self.setMode(Mode.MANUAL)
 
         # Auto
         def auto(self):
-            self.mode = Mode.AUTO
+            self.setMode(Mode.AUTO)
 
         # Disable
         def disable(self):
-            self.mode = Mode.DISABLED
+            self.setMode(Mode.DISABLED)
             
         # Initialize the drive system and hardware
         def initialize(self):
@@ -77,7 +77,7 @@ class Drive:
             self.run.start()
 
         # Edit the drive mode vairable
-        def setMode(self, mode):
+        def setMode(self, mode: Mode):
             self.logger.info(f"Requesting Mode Switch from {Mode.names[self.run_state.mode]} to {Mode.names[self.run_state.mode]}")
             self.mode = mode
 

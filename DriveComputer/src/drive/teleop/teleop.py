@@ -17,7 +17,7 @@ from drive_control.my_cart import MyCart
 
 class Teleop:
 
-    def __init__(self, cart):
+    def __init__(self, cart: MyCart):
         # Kill
         self.kill = False
 
@@ -31,13 +31,7 @@ class Teleop:
         self.logger.addHandler(file_handler)
 
         # Hardware
-        if isinstance(cart, MyCart):
-            self.my_cart = cart
-
-        # Not instance
-        else:
-            self.logger.fatal("FAILED TO PASS CART HARDWARE")
-            sys.exit(1)
+        self.my_cart = cart
 
         # Gamepad
         self.gamepad = Gamepad()
@@ -49,7 +43,7 @@ class Teleop:
         self.button_map = {
             'BTN_TL': self.noAction,
             'BTN_TR': self.noAction,
-            'BTN_NORTH': self.noAction,
+            'BTN_NORTH': self.my_cart.honk,
             'BTN_EAST': self.noAction,
             'BTN_SOUTH': self.noAction,
             'BTN_WEST': self.noAction,
@@ -57,10 +51,10 @@ class Teleop:
             'BTN_THUMBR': self.noAction,
             'BTN_START': self.noAction,
             'BTN_SELECT': self.noAction,
-            'DPAD_NORTH': self.noAction,
-            'DPAD_SOUTH': self.noAction,
-            'DPAD_EAST': self.noAction,
-            'DPAD_WEST': self.noAction
+            'DPAD_NORTH': self.my_cart.forwards,
+            'DPAD_SOUTH': self.my_cart.reverse,
+            'DPAD_EAST': self.my_cart.rightSignal,
+            'DPAD_WEST': self.my_cart.leftSignal
 
         }
 
@@ -68,19 +62,18 @@ class Teleop:
             'LSTICK_X': self.noAction,
             'LSTICK_Y': self.noAction,
             'RSTICK_X': self.noAction,
-            'RSTICK_Y': self.noAction
+            'RSTICK_Y': self.my_cart.setSpeed
 
         }
 
         self.trigger_map = {
-            'ABS_Z': self.noAction,
-            'ABS_RZ': self.noAction
+            'ABS_Z': self.my_cart.turnLeft,
+            'ABS_RZ': self.my_cart.turnRight
 
         }
 
     # Mode Initialization, Called Once
     def initialize(self):
-        self.my_cart.applyTeleop()
         self.connector.intialize()
 
         wait_time = 0
