@@ -64,7 +64,7 @@ class Direction_Controller:
 
         def goTo(self, postion, power = 255):
             self.logger.debug(f"Running to Postion {postion} at {power}")
-            return f"({self.can_address}) 11 1 {power} {can_util.sixteentoeight_coarse(postion)} {can_util.sixteentoeight_fine(postion)} 0 0 0"
+            return f"({self.can_address}) 11 1 {can_util.sixteentoeight_coarse(postion)} {can_util.sixteentoeight_fine(postion)} {power} 0 0 0"
 
         # Request the steering motor position
         def reqPos(self):
