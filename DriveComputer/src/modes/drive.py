@@ -3,12 +3,12 @@ import threading
 import logging
 import time
 
-from DriveComputer.src.drive_control.my_cart import MyCart
+from src.ControlLib.ControlLib.src.my_cart import MyCart
 
-from DriveComputer.src.drive.auto.auto import Auto
-from DriveComputer.src.drive.disabled.disabled import Disabled
-from DriveComputer.src.drive.manual.manual import Manual
-from DriveComputer.src.drive.teleop.teleop import Teleop
+from src.modes.auto.auto import Auto
+from src.modes.disabled.disabled import Disabled
+from src.modes.manual.manual import Manual
+from src.modes.teleop.teleop import Teleop
 
 class Mode(enum.Enum):
         AUTO = 1

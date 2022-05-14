@@ -1,4 +1,4 @@
-from drive.drive import Mode
+from src.modes.drive import Mode
 
 
 class Auto:

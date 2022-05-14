@@ -1,8 +1,11 @@
-from drive.drive import Drive
-from drive_control.my_cart import MyCart
-import DriveComputer.src.util as util
 import sys
 import logging
+
+from src.ControlLib.ControlLib.src.my_cart import MyCart
+
+from src.modes.drive import Drive
+
+import src.util as util
 
 # Drive Computer Core Library
 # Main
@@ -38,7 +41,7 @@ def main():
     logger.info("Initializing Cart System")
 
     # Function Setup
-    drive = Drive(cart=MyCart())
+    drive = Drive(cart=MyCart(json_config_path="cart_sys_config.json"))
     drive.initialize()
 
     # Done

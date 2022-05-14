@@ -1,0 +1,3 @@
+[submodule "DriveComputer/src/ControlLib"]
+	path = DriveComputer/src/ControlLib
+	url = https://github.com/GSSM-AutoGolfCart/ControlLib

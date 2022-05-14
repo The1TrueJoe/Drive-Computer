@@ -2,12 +2,12 @@ import sys
 import logging
 import time
 
-from drive.drive import Mode
+from src.modes.drive import Mode
 
-from drive.teleop.controller import Gamepad
-from drive.teleop.remote_drive_server import Remote_Drive_Server
+from src.modes.teleop.controller import Gamepad
+from src.modes.teleop.remote_drive_server import Remote_Drive_Server
 
-from drive_control.my_cart import MyCart
+from src.ControlLib.ControlLib.src.my_cart import MyCart
 
 # Drive Computer
 # Teleop Drive Mode

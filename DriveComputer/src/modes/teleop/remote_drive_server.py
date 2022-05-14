@@ -3,7 +3,7 @@ import threading
 import time
 import socket
 
-from drive.teleop.controller import Gamepad
+from src.modes.teleop.controller import Gamepad
 
 # Drive Computer
 # Teleop Server

@@ -1,5 +1,5 @@
-from DriveComputer.src.drive.drive import Mode
-from DriveComputer.src.drive_control.my_cart import MyCart
+from src.modes.drive import Mode
+from src.ControlLib.ControlLib.src.my_cart import MyCart
 
 
 class Manual:
