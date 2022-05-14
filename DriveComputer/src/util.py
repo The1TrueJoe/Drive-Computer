@@ -35,7 +35,7 @@ def to_color(string, color):
     return colors[color] + str(string) + colors["reset"]
 
 # Clear screen
-def clear(self):
+def clear():
     # Clear Screen
     os.system('cls' if os.name == 'nt' else 'clear')
     
